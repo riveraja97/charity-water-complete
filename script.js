@@ -1,111 +1,64 @@
-// Minimal game UI wiring
-// This file replaces an accidental CSS overwrite. It adds event listeners for the main menu
-// buttons and provides tiny stubs for starting the game and showing the game over screen.
+:root{
+  --brand-blue: #2e9df7;
+  --brand-yellow: #ffc907;
+  --brand-dark: #231f20;
+  --bg: #cdeeff;
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-  const overlay = document.getElementById('overlay');
-  const mainMenu = document.getElementById('mainMenu');
-  const howMenu = document.getElementById('howMenu');
-  const aboutMenu = document.getElementById('aboutMenu');
-  const charMenu = document.getElementById('charMenu');
-  const gameOver = document.getElementById('gameOver');
-  const toast = document.getElementById('toast');
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+body{background:linear-gradient(180deg,#bfeaff 0%, #87d5ff 100%); color:var(--brand-dark); display:flex; flex-direction:column; align-items:center;}
 
-  function showOverlay() { if (overlay) overlay.classList.remove('hidden'); }
-  function hideOverlay() { if (overlay) overlay.classList.add('hidden'); }
+header{width:100%; max-width:900px; margin-top:12px; text-align:center;}
+h1{margin:8px 0; font-size:28px; color:var(--brand-dark); letter-spacing:2px;}
+.hud{display:flex;justify-content:space-between; align-items:center; padding:6px 12px; background:rgba(255,255,255,0.9); border-radius:8px; margin-bottom:8px; box-shadow:0 2px 6px rgba(0,0,0,0.08);}
+/* HUD items */
+.hud > div{min-width:110px; text-align:center; font-weight:600; color:var(--brand-dark);}
 
-  function hideAllMenus() {
-    [mainMenu, howMenu, aboutMenu, charMenu, gameOver].forEach(m => {
-      if (m) m.classList.add('hidden');
-    });
-    hideOverlay();
-  }
+/* canvas container */
+main{width:100%; max-width:900px; display:flex; flex-direction:column; align-items:center; position:relative; margin-bottom:12px;}
+canvas{background:linear-gradient(#87ceeb,#2e9df7); width:95%; max-width:880px; height:420px; border-radius:8px; border:3px solid var(--brand-dark); display:block; touch-action:none;}
 
-  function showMenu(menu) {
-    hideAllMenus();
-    if (menu) {
-      menu.classList.remove('hidden');
-      showOverlay();
-    }
-  }
+/* Mobile controls */
+#mobileControls{display:flex; gap:12px; margin-top:8px;}
+.touch-btn{background:var(--brand-yellow); border:none; padding:12px 18px; font-size:16px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.15); cursor:pointer;}
+.touch-btn:active{transform:translateY(2px)}
 
-  // Wire buttons
-  const startBtn = document.getElementById('startBtn');
-  const howBtn = document.getElementById('howBtn');
-  const aboutBtn = document.getElementById('aboutBtn');
-  const charsBtn = document.getElementById('charsBtn');
-  const howBack = document.getElementById('howBack');
-  const aboutBack = document.getElementById('aboutBack');
-  const charBack = document.getElementById('charBack');
-  const playAgainBtn = document.getElementById('playAgainBtn');
-  const menuBtn = document.getElementById('menuBtn');
-  const openCharSelectBtn = document.getElementById('openCharSelectBtn');
+/* Menus */
+.menu{position:fixed; left:50%; transform:translateX(-50%); top:12%; width:340px; max-width:92%; background:#fff; border-radius:12px; padding:18px; box-shadow:0 8px 30px rgba(0,0,0,0.15); border:3px solid var(--brand-dark); z-index:50; text-align:center;}
+.menu h2, .menu h3{margin:6px 0 12px 0;}
+.menu-buttons{display:flex;flex-direction:column; gap:10px; margin-top:6px;}
+.menu .menu-buttons button{background:var(--brand-yellow); border:none; padding:10px; border-radius:8px; font-weight:700; cursor:pointer;}
+.menu .menu-buttons button:hover{background:var(--brand-blue); color:#fff}
 
-  function startGame() {
-    hideAllMenus();
-    console.log('Game started (stub).');
-    // If the original game exposed an init function, call it
-    if (typeof window.initGame === 'function') window.initGame();
-  }
+/* character list */
+.char-list{display:flex; justify-content:center; gap:12px; margin-bottom:10px;}
+.char-skin{width:64px; height:64px; border-radius:10px; border:3px solid var(--brand-dark); display:flex; align-items:center; justify-content:center; font-weight:700; cursor:pointer;}
+.char-skin.locked{opacity:.45; filter:grayscale(.4); cursor:default; position:relative;}
+.char-skin.locked::after{content:"🔒"; position:absolute; font-size:18px; right:6px; top:6px;}
 
-  function showGameOver(score = 0, best = 0) {
-    const finalScoreText = document.getElementById('finalScoreText');
-    const bestScoreText = document.getElementById('bestScoreText');
-    if (finalScoreText) finalScoreText.textContent = `Final Score: ${score}`;
-    if (bestScoreText) bestScoreText.textContent = `Highest Score: ${best}`;
-    showMenu(gameOver);
-  }
+/* overlay & toast */
+.overlay{position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:40;}
+.hidden{display:none;}
+.toast{position:fixed; left:50%; transform:translateX(-50%); bottom:16px; background:rgba(255,255,255,0.95); padding:10px 14px; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.18); border:2px solid var(--brand-dark); z-index:70; font-weight:700}
 
-  function showToast(msg, time = 2000) {
-    if (!toast) return;
-    toast.textContent = msg;
-    toast.classList.remove('hidden');
-    setTimeout(() => toast.classList.add('hidden'), time);
-  }
+/* game over details */
+#gameOver p{margin:6px 0}
 
-  if (startBtn) startBtn.addEventListener('click', startGame);
-  if (howBtn) howBtn.addEventListener('click', () => showMenu(howMenu));
-  if (aboutBtn) aboutBtn.addEventListener('click', () => showMenu(aboutMenu));
-  if (charsBtn) charsBtn.addEventListener('click', () => showMenu(charMenu));
-  if (howBack) howBack.addEventListener('click', () => showMenu(mainMenu));
-  if (aboutBack) aboutBack.addEventListener('click', () => showMenu(mainMenu));
-  if (charBack) charBack.addEventListener('click', () => showMenu(mainMenu));
+/* small responsive tweaks */
+.credit{font-size:12px;color:#555;margin-top:8px}
+footer{width:100%; max-width:900px; text-align:center; margin:12px auto 30px; color:var(--brand-dark);}
+.desktop-only{display:block}
+.mobile-only{display:none}
 
-  if (playAgainBtn) playAgainBtn.addEventListener('click', startGame);
-  if (menuBtn) menuBtn.addEventListener('click', () => showMenu(mainMenu));
-  if (openCharSelectBtn) openCharSelectBtn.addEventListener('click', () => showMenu(charMenu));
+/* responsive */
+@media(max-width:768px){
+  canvas{height:56vh;}
+  .desktop-only{display:none}
+  .mobile-only{display:block}
+  .menu{top:6%}
+}
 
-  // Mobile controls (stubs) — adapt to existing input handlers if available
-  const leftBtn = document.getElementById('leftBtn');
-  const rightBtn = document.getElementById('rightBtn');
-  const jumpBtn = document.getElementById('jumpBtn');
-  if (leftBtn) {
-    leftBtn.addEventListener('touchstart', () => console.log('move left start'));
-    leftBtn.addEventListener('touchend', () => console.log('move left end'));
-  }
-  if (rightBtn) {
-    rightBtn.addEventListener('touchstart', () => console.log('move right start'));
-    rightBtn.addEventListener('touchend', () => console.log('move right end'));
-  }
-  if (jumpBtn) jumpBtn.addEventListener('click', () => console.log('jump'));
-
-  // Keyboard stubs
-  window.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') {
-      e.preventDefault();
-      console.log('jump (space)');
-    }
-    if (e.code === 'ArrowLeft') console.log('move left (keydown)');
-    if (e.code === 'ArrowRight') console.log('move right (keydown)');
-    if (e.key === 'Escape') showMenu(mainMenu);
-  });
-
-  if (overlay) overlay.addEventListener('click', hideAllMenus);
-
-  // expose a couple of helpers for other scripts
-  window.showGameOver = showGameOver;
-  window.showToast = showToast;
-
-  // show main menu on load
-  showMenu(mainMenu);
-});
+/* small UI effects used by script (hit flash) */
+.flash { animation: flashAnim 400ms linear; }
+@keyframes flashAnim { 0%{opacity:0.15} 50%{opacity:1} 100%{opacity:0.15} }

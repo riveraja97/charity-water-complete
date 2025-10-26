@@ -1,90 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Water Run 💧 - Prototype</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💧 Water Drop Hero 💧</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>WATER RUN 💧</h1>
-    <div class="hud" id="hud">
-      <div id="score">Score: 0</div>
-      <div id="lives">Lives: ❤❤❤</div>
-      <div id="level">Level: 1</div>
-    </div>
-  </header>
-
-  <!-- Canvas container -->
-  <main>
-    <canvas id="gameCanvas"></canvas>
-
-    <!-- Mobile on-screen controls -->
-    <div id="mobileControls" class="mobile-only">
-      <button id="leftBtn" class="touch-btn">◀</button>
-      <button id="jumpBtn" class="touch-btn">JUMP</button>
-      <button id="rightBtn" class="touch-btn">▶</button>
-    </div>
-  </main>
-
-  <!-- Menus & overlays -->
-  <div id="overlay" class="overlay hidden"></div>
-
+  <!-- Main Menu -->
   <section id="mainMenu" class="menu">
-    <h2>WATER RUN 💧</h2>
-    <p>Collect drops • Avoid obstacles • Unlock characters</p>
+    <h1>💧 Water Drop Hero 💧</h1>
+    <p class="tagline">Collect water, avoid obstacles, and help change lives.</p>
+
     <div class="menu-buttons">
       <button id="startBtn">Start Game</button>
+      <button id="difficultyBtn">Select Difficulty</button>
       <button id="howBtn">How to Play</button>
       <button id="aboutBtn">About</button>
-      <button id="charsBtn">Character Select</button>
+      <button id="charsBtn">Select Character</button>
     </div>
-    <small class="credit">Inspired by <a href="https://www.charitywater.org" target="_blank" rel="noopener">charity: water</a></small>
+
+    <small class="credit">
+      Inspired by 
+      <a href="https://www.charitywater.org" target="_blank" rel="noopener">
+        charity: water
+      </a>
+    </small>
   </section>
 
+  <!-- Difficulty Menu -->
+  <section id="difficultyMenu" class="menu hidden">
+    <h3>Select Difficulty</h3>
+    <div class="menu-buttons">
+      <button class="difficulty" data-mode="easy">💧 Easy</button>
+      <button class="difficulty" data-mode="normal">🌊 Normal</button>
+      <button class="difficulty" data-mode="hard">🌪️ Hard</button>
+    </div>
+    <button id="difficultyBack">Back</button>
+  </section>
+
+  <!-- How to Play -->
   <section id="howMenu" class="menu hidden">
     <h3>How to Play</h3>
+    <p>Collect 💧 water drops to earn points and help your community!</p>
     <ul>
-      <li>Desktop: <strong>Space</strong> = jump, <strong>← →</strong> = move</li>
-      <li>Mobile: <strong>Tap</strong> to jump, use on-screen arrows to move</li>
-      <li>Catch water drops (+10). Avoid obstacles (lose 1 life).</li>
-      <li>Level increases every 500 points (game gets faster).</li>
+      <li>Desktop: Use ← / → to move, Space to jump</li>
+      <li>Mobile: Use on-screen arrows + Jump button</li>
+      <li>Each 💧 = +10 pts</li>
+      <li>Hitting 🪨 or 🗑️ = −10 pts and counts as 1 hit</li>
+      <li>3 hits = Game Over</li>
+      <li>Unlock emoji heroes at Levels 3, 6, 9...</li>
     </ul>
     <button id="howBack">Back</button>
   </section>
 
+  <!-- About -->
   <section id="aboutMenu" class="menu hidden">
     <h3>About</h3>
-    <p>This prototype is built to help raise awareness for clean water initiatives. Learn more at <a href="https://www.charitywater.org" target="_blank" rel="noopener">charity: water</a>.</p>
+    <p>This game raises awareness for clean water projects supported by charity: water.</p>
+    <p>Built with 💻 JavaScript, HTML, and 💧 creativity.</p>
     <button id="aboutBack">Back</button>
   </section>
 
+  <!-- Character Select -->
   <section id="charMenu" class="menu hidden">
-    <h3>Choose Character</h3>
+    <h3>Select Your Character</h3>
     <div id="charList" class="char-list"></div>
-    <p class="note">Unlock new skins at Levels 3, 6, 9, ...</p>
+    <p class="note">Unlock at Levels 3, 6, 9, etc.</p>
     <button id="charBack">Back</button>
   </section>
 
-  <section id="gameOver" class="menu hidden">
-    <h3>GAME OVER</h3>
-    <p id="finalScoreText">Final Score: 0</p>
-    <p id="bestScoreText">Highest Score: 0</p>
-    <div class="menu-buttons">
-      <button id="playAgainBtn">Play Again</button>
-      <button id="menuBtn">Main Menu</button>
-      <button id="openCharSelectBtn">Characters</button>
+  <!-- Game -->
+  <section id="gameSection" class="hidden">
+    <div id="hud">
+      <span id="score">Score: 0</span>
+      <span id="lives">❤️❤️❤️</span>
+      <span id="level">Level: 1</span>
     </div>
+    <canvas id="gameCanvas"></canvas>
+    <div id="mobileControls">
+      <button id="leftBtn">⬅️</button>
+      <button id="jumpBtn">⬆️</button>
+      <button id="rightBtn">➡️</button>
+    </div>
+    <div id="toast"></div>
   </section>
 
-  <!-- small transient notifications -->
-  <div id="toast" class="toast hidden"></div>
-
-  <footer>
-    <p class="desktop-only">SPACE = jump | ← → = move</p>
-    <p class="mobile-only">Tap to jump | On-screen arrows to move</p>
-  </footer>
+  <!-- Game Over -->
+  <section id="gameOver" class="menu hidden">
+    <h2>Game Over 💀</h2>
+    <p id="finalScoreText"></p>
+    <p id="bestScoreText"></p>
+    <button id="playAgainBtn">Play Again</button>
+    <button id="menuBtn">Main Menu</button>
+  </section>
 
   <script src="script.js"></script>
 </body>
